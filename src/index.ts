@@ -7,6 +7,7 @@ import { ReadSome } from './lib/ericchase/Web API/Blob_Utility.js';
 import { Compat_File } from './lib/ericchase/Web API/File.js';
 import { PNGInspect } from './lib/png-inspect.js';
 import { PNGSplit } from './lib/png-split.js';
+import { SaveBlob } from './lib/ericchase/Platform/Web/AnchorDownloader.js';
 
 class PageControl {
   buttonContainer: Element;
@@ -101,6 +102,18 @@ class PageControl {
       if (bytes) {
         const split_size = this.sizeInput_getSize();
         const split_buffers = await PNGSplit(bytes, split_size);
+        // Auto-download each generated image
+        try {
+          const originalName = Compat_File(selected_file).name ?? 'image.png';
+          const baseName = originalName.replace(/\.png$/i, '');
+          split_buffers.forEach((buf, i) => {
+            const filename = `${baseName}__split_${String(i + 1).padStart(2, '0')}.png`;
+            SaveBlob(new Blob([buf], { type: 'image/png' }), filename);
+          });
+        } catch (error) {
+          ConsoleError(error);
+          // Continue even if download fails; still render to page
+        }
         await this.addImagesToOutput(split_buffers);
         this.addTextsToOutput([`Split results for "${Compat_File(selected_file).name}"`, '', `Size: ${split_size}`]);
       }
