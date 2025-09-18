@@ -195,6 +195,27 @@ class PageControl {
       this.outputContainer_show();
       // scroll top image into view
       imgs.at(-1)?.scrollIntoView(false);
+      // Fallback: Offer a manual Download All button in case auto-downloads were blocked
+      try {
+        const originalName = Compat_File(selected_file).name ?? 'image.png';
+        const baseName = originalName.replace(/\.png$/i, '');
+        const wrapper = document.createElement('div');
+        const info = document.createElement('pre');
+        info.textContent = 'If downloads were blocked by your browser, click Download All.';
+        const button = document.createElement('button');
+        button.textContent = 'Download All';
+        button.addEventListener('click', () => {
+          buffers.forEach((buf, i) => {
+            const filename = `${baseName}__split_${String(i + 1).padStart(2, '0')}.png`;
+            SaveBlob(new Blob([buf], { type: 'image/png' }), filename);
+          });
+        });
+        wrapper.appendChild(info);
+        wrapper.appendChild(button);
+        this.outputContainer_prepend(wrapper);
+      } catch (error) {
+        ConsoleError(error);
+      }
     } catch (error) {
       ConsoleError(error);
     }
