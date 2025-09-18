@@ -17,3 +17,20 @@ I gathered most of the ideas from amazing resources, like https://www.nayuki.io/
 The goal was to split up a png file into smaller parts. If you know a bit about the png spec, you might naively think this is an easy task. It seemed that way for us at first. The more I asked ChatGPT about the different parts of a png file, I began to realize that processing pngs for even simple tasks require a great deal of precise code.
 
 For serious use cases, I would probably look into a vetted png library for whichever language is needed, instead.
+
+## Run with Docker (docker branch)
+
+Build and run a container that serves the static site:
+
+```
+docker build -t png-inspector .
+docker run --rm -p 8080:80 png-inspector
+```
+
+Then open http://localhost:8080.
+
+Using docker-compose:
+
+```
+docker compose up --build
+```
