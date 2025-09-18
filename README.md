@@ -1,6 +1,6 @@
 # PNG Inspector-Splitter
 
-- https://ericchase.github.io/tool--png-inspector-splitter/
+- https://midyear66.github.io/tool--png-inspector-splitter/
 
 # Example
 
